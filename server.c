@@ -80,7 +80,7 @@ void doit(int fd)
         return;
 
     printf("Request headers:\n");
-    printf("%s\n", buf);
+    printf("%s", buf);
 
     if (sscanf(buf, "%s %s %s", method, uri, version) < 3)
     {
@@ -93,17 +93,21 @@ void doit(int fd)
         return;
     }
 
-    // 1. 获取 Content-Length
+    // 1. 获取 Header 中的 Content-Length
     int content_length = read_requesthdrs(&rio);
+
     is_static = parse_uri(uri, filename, cgiarg);
 
-    // 2. 如果是 POST，使用 rio_readnb 按准确字节数读取 Body
+    // 2. 如果是 POST，使用 rio_readnb 精确读取 content_length 字节
     if (strcasecmp(method, "POST") == 0)
     {
         if (content_length > 0 && content_length < MAXLINE)
         {
-            rio_readnb(&rio, cgiarg, content_length); // 精确读取 content_length 字节
-            cgiarg[content_length] = '\0';            // 手动追加 null 终止符
+            rio_readnb(&rio, cgiarg, content_length); // 按长度精确读取
+            cgiarg[content_length] = '\0';            // 补上字符串结束符
+
+            // 打印出读取到的 POST Body，验证是否接收成功！
+            printf("POST Body (%d bytes): %s\n\n", content_length, cgiarg);
         }
     }
 
@@ -173,7 +177,7 @@ int read_requesthdrs(rio_t *rp)
         }
         rio_readlineb(rp, buf, MAXLINE);
     }
-    return content_length;
+    return content_length; // 返回 Body 长度
 }
 
 int parse_uri(char *uri, char *filename, char *cgiargs)

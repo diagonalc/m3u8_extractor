@@ -67,7 +67,7 @@ def run():
 
         page.on("response", handle_response)
 
-        target_url = "https://loli32.top/index.php/vod/play/id/987/sid/1/nid/1.html"
+        target_url = input("URL:")
         page.goto(target_url, wait_until="domcontentloaded")
 
         # 执行极速滑动
