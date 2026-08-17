@@ -4,7 +4,7 @@ void call_python_script(const char *target_url, char *output_m3u8, size_t max_le
 {
     char command[MAXBUF];
     // Linux 环境下使用 python3 并在脚本名和参数加上引号
-    snprintf(command, sizeof(command), "python3 get_m3u8.py \"%s\"", target_url);
+    snprintf(command, sizeof(command), ".venv/bin/python3 get_m3u8.py \"%s\"", target_url);
 
     // Linux 环境下使用 popen 代替 Windows 的 _popen
     FILE *fp = popen(command, "r");

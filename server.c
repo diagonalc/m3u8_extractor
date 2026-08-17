@@ -104,6 +104,11 @@ void doit(int fd)
         {
             rio_readnb(&rio, cgiarg, content_length); // 精确读取 content_length 字节
             cgiarg[content_length] = '\0';            // 手动追加 null 终止符
+            printf("POST body (content_length=%d): [%s]\n", content_length, cgiarg); // 调试：打印收到的正文
+        }
+        else
+        {
+            printf("POST body: content_length=%d, 未读取正文\n", content_length); // 调试：无正文可读
         }
     }
 
